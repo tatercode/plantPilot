@@ -1,5 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 
+// TODO: Calendar that displays date watered per plant
+
 export default function Tab() {
   return (
     <View style={styles.container}>
