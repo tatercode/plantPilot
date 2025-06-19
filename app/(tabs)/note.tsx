@@ -9,6 +9,8 @@ import { Plant } from "@/types/Plant";
 import { FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
+import ImagePickerExample from "@/components/ImagePicker";
+import TakePhoto from "@/components/TakePhoto";
 
 // TODO: Implement actual call
 import { mockPlants } from "@/mock-data/mock-plants";
@@ -75,6 +77,9 @@ export default function Tab() {
           {editedNote || "No notes available for this plant."}
         </Text>
       )}
+
+      <ImagePickerExample />
+      <TakePhoto />
     </View>
   );
 }
