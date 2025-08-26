@@ -7,16 +7,21 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Modal,
 } from "react-native";
 import { mockPlants } from "@/mock-data/mock-plants";
 import { Plant } from "@/types/Plant";
 import { router } from "expo-router";
+import ImagePickerExample from "@/components/ImagePicker";
+import TakePhoto from "@/components/TakePhoto";
 
 // TODO: Add way to add photo
 
 export default function Tab() {
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
   const handleCreatePlant = () => {
     // validate name
@@ -46,6 +51,11 @@ export default function Tab() {
     ]);
   };
 
+  const handleTakePhoto = (uri: string) => {
+    setImage(uri);
+    setIsCameraOpen(false);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Add New Plant</Text>
@@ -70,6 +80,33 @@ export default function Tab() {
           multiline
         />
       </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {}}
+        >
+          <Text style={styles.buttonText}>Pick an image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setIsCameraOpen(true)}
+        >
+          <Text style={styles.buttonText}>Take Photo</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isCameraOpen}
+        onRequestClose={() => setIsCameraOpen(false)}
+      >
+        <TakePhoto
+          onClose={() => setIsCameraOpen(false)}
+          onPictureTaken={handleTakePhoto}
+        />
+      </Modal>
 
       <TouchableOpacity style={styles.button} onPress={handleCreatePlant}>
         <Text style={styles.buttonText}>Add Plant</Text>
@@ -122,5 +159,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 20,
   },
 });

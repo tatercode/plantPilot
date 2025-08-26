@@ -4,11 +4,15 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Modal,
+  Button,
 } from "react-native";
 import { Plant } from "@/types/Plant";
 import { FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
+import ImagePickerExample from "@/components/ImagePicker";
+import TakePhoto from "@/components/TakePhoto";
 
 // TODO: Implement actual call
 import { mockPlants } from "@/mock-data/mock-plants";
@@ -18,6 +22,8 @@ export default function Tab() {
   const plant: Plant = plantParam ? JSON.parse(plantParam as string) : null;
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState(plant.note);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
   if (!plant) {
     return (
@@ -45,6 +51,11 @@ export default function Tab() {
 
     plant.note = editedNote;
     setIsEditing(false);
+  };
+
+  const handleTakePhoto = (uri: string) => {
+    setImage(uri);
+    setIsCameraOpen(false);
   };
 
   return (
@@ -75,6 +86,33 @@ export default function Tab() {
           {editedNote || "No notes available for this plant."}
         </Text>
       )}
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {}}
+        >
+          <Text style={styles.buttonText}>Pick an image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setIsCameraOpen(true)}
+        >
+          <Text style={styles.buttonText}>Take Photo</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isCameraOpen}
+        onRequestClose={() => setIsCameraOpen(false)}
+      >
+        <TakePhoto
+          onClose={() => setIsCameraOpen(false)}
+          onPictureTaken={handleTakePhoto}
+        />
+      </Modal>
     </View>
   );
 }
@@ -109,5 +147,19 @@ const styles = StyleSheet.create({
     padding: 10,
     minHeight: 150,
     textAlignVertical: "top",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 20,
+  },
+  button: {
+    backgroundColor: "#0B6623",
+    padding: 15,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
